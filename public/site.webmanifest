@@ -1,0 +1,19 @@
+{
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "icons": [
+        {
+            "sizes": "192x192",
+            "src": "/android-chrome-192x192.png",
+            "type": "image/png"
+        },
+        {
+            "sizes": "256x256",
+            "src": "/android-chrome-256x256.png",
+            "type": "image/png"
+        }
+    ],
+    "name": "ExTrack",
+    "short_name": "ExTrack",
+    "theme_color": "#ffffff"
+}
