@@ -30,6 +30,9 @@ export default {
     extend: {
       fontFamily: {
         'sans': ['Rubik', ...defaultTheme.fontFamily.sans]
+      },
+      backgroundImage: {
+        'unauth': 'url("@/assets/images/people-in-gym.svg")'
       }
     },
   },
