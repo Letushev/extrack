@@ -33,7 +33,7 @@ export default {
       },
       backgroundImage: {
         'unauth': 'url("@/assets/images/people-in-gym.svg")'
-      }
+      },
     },
   },
   plugins: [],

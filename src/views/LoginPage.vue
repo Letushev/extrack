@@ -1,43 +1,61 @@
 <script setup lang="ts">
+import { toTypedSchema } from '@vee-validate/zod'
+import { useForm } from 'vee-validate'
+import { useRouter } from 'vue-router'
+import { z } from 'zod'
+
+import { login } from '@/api/auth'
 import BaseButton from '@/components/BaseButton.vue'
 import TextField from '@/components/TextField.vue'
 import UnauthLayoutVue from '@/components/UnauthLayout.vue'
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/yup'
-import axios from 'axios'
-import * as yup from 'yup'
-import { useRouter } from 'vue-router'
+import { useMutation } from '@/composables/use-mutation'
+import { useAuthStore } from '@/stores/auth'
+import { useToastsStore } from '@/stores/toasts'
 
 const router = useRouter()
 
+const authStore = useAuthStore()
+const { showToast } = useToastsStore()
+
+const { mutate, isLoading } = useMutation(login)
+
 const { handleSubmit } = useForm({
   validationSchema: toTypedSchema(
-    yup.object({
-      email: yup.string().required().email().default('').label('Email'),
-      password: yup.string().required().default('').label('Password')
+    z.object({
+      email: z.string().trim().min(1, 'Email is required').email().default(''),
+      password: z.string().min(1, 'Password is required').default('')
     })
   )
 })
 
-const onSubmit = handleSubmit(async (values) => {
-  const response = await axios.post(
-    'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDB-zAf2zmVZqOnItZ4yAvLZ0RRiVxYgbA',
+const onSubmit = handleSubmit((values) => {
+  mutate(
     {
       email: values.email,
-      password: values.password,
-      returnSecureToken: true
+      password: values.password
+    },
+    {
+      onSuccess: (data) => {
+        authStore.authorize({
+          userId: data.localId,
+          accessToken: data.idToken,
+          expiresIn: data.expiresIn
+        })
+
+        router.push({ name: 'tracking' })
+      },
+      onError: (error) => {
+        showToast({ type: 'error', message: error })
+      }
     }
   )
-
-  console.log(response)
-  router.push({ name: 'exercises' })
 })
 </script>
 
 <template>
   <UnauthLayoutVue title="Welcome Back">
     <form @submit="onSubmit">
-      <div class="space-y-6 mb-8">
+      <div class="mb-8 space-y-6">
         <TextField name="email" label="Email" autocomplete="email" />
         <TextField
           name="password"
@@ -46,8 +64,8 @@ const onSubmit = handleSubmit(async (values) => {
           autocomplete="current-password"
         />
       </div>
-      <BaseButton size="large" class="w-full mb-4">Sign in</BaseButton>
-      <p class="text-sm text-center">
+      <BaseButton size="large" class="mb-4 w-full" :is-loading="isLoading">Sign in</BaseButton>
+      <p class="text-center text-sm">
         New to ExTrack?
         <RouterLink class="text-blue" :to="{ name: 'signup' }">Create an account</RouterLink>
       </p>

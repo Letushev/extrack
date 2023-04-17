@@ -9,12 +9,15 @@ type ButtonProps = {
   variant?: ButtonVariant
   size?: ButtonSize
   color?: ButtonColor
+  isLoading?: boolean
+  disabled?: boolean
 }
 
 const props = withDefaults(defineProps<ButtonProps>(), {
   variant: 'contained',
   size: 'medium',
-  color: 'primary'
+  color: 'primary',
+  isLoading: false
 })
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -41,18 +44,24 @@ const variantColorStyles: Record<ButtonVariant, Record<ButtonColor, string>> = {
   }
 }
 
+const disabled = computed(() => props.isLoading || props.disabled)
+
 const buttonClass = computed(() => {
   return [
     'rounded font-medium transition-colors',
     sizeStyles[props.size],
     variantStyles[props.variant],
-    variantColorStyles[props.variant][props.color]
+    variantColorStyles[props.variant][props.color],
+    {
+      'bg-light-silver hover:bg-light-silver': disabled.value
+    }
   ]
 })
 </script>
 
 <template>
-  <button :class="buttonClass">
-    <slot></slot>
+  <button :class="buttonClass" :disabled="disabled">
+    <slot v-if="!isLoading"></slot>
+    <template v-else>Loading...</template>
   </button>
 </template>
