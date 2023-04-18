@@ -1,8 +1,8 @@
 import './style.css'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCircleCheck } from '@fortawesome/free-regular-svg-icons'
-import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck, faCircleXmark } from '@fortawesome/free-regular-svg-icons'
+import { faChevronDown, faExclamationCircle, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
@@ -10,7 +10,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 
-library.add(faCircleCheck, faExclamationCircle)
+library.add(faCircleCheck, faExclamationCircle, faCircleXmark, faChevronDown, faTrashCan)
 
 const app = createApp(App)
 

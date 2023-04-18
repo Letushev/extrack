@@ -10,12 +10,16 @@ const ClientErrorSchema = z.object({
 /** Simple axios request with strict response schema and primitive error handling  */
 export const request = async <TResponseSchema extends ZodTypeAny>(
   requestConfig: AxiosRequestConfig,
-  responseSchema: TResponseSchema,
+  responseSchema?: TResponseSchema,
   clientErrors: Record<string, string> = {}
 ) => {
   try {
     const response = await axios(requestConfig)
+
+    if (!responseSchema) return
+
     const parsedData = responseSchema.safeParse(response.data)
+
     if (parsedData.success) {
       return parsedData.data as z.infer<typeof responseSchema>
     } else {
@@ -30,6 +34,7 @@ export const request = async <TResponseSchema extends ZodTypeAny>(
       if (error.response) {
         if (error.response.status >= 400) {
           const parsedError = ClientErrorSchema.safeParse(error.response.data)
+
           if (parsedError.success) {
             throw clientErrors[parsedError.data.error.message] ?? parsedError.data.error.message
           }

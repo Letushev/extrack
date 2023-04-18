@@ -13,11 +13,7 @@ const props = defineProps<{
   label?: string
   helperText?: string
   id?: string
-  width?: string
-}>()
-
-defineEmits<{
-  (emit: 'update:modelValue', value: string): void
+  multiline?: boolean
 }>()
 
 const { value, errorMessage, handleChange } = useField<string>(() => props.name, undefined, {
@@ -38,23 +34,25 @@ const validationListeners = computed(() => {
 </script>
 
 <template>
-  <div :class="width ? `w-[${width}]` : 'w-full'">
-    <label v-if="label" class="block text-sm text-grey mb-2" :for="labelConnector">
+  <div class="w-full">
+    <label v-if="label" class="mb-2 block text-sm text-grey" :for="labelConnector">
       {{ label }}
     </label>
 
-    <input
+    <component
+      :is="multiline ? 'textarea' : 'input'"
       :value="value"
       v-on="validationListeners"
       :id="labelConnector"
       :class="[
-        'w-full h-12 border border-bright-grey rounded px-4 text-base focus:border-blue focus:outline-none',
-        hasError ? 'border-red' : 'border-bright-grey'
+        'h-12 w-full rounded border border-bright-grey px-4 text-base focus:border-blue focus:outline-none',
+        hasError ? 'border-red' : 'border-bright-grey',
+        { 'h-24 resize-none py-3.5': multiline }
       ]"
       v-bind="$attrs"
     />
 
-    <span v-if="helperText" :class="['block text-xs mt-1.5', hasError ? 'text-red' : 'text-grey']">
+    <span v-if="helperText" :class="['mt-1.5 block text-xs', hasError ? 'text-red' : 'text-grey']">
       {{ helperText }}
     </span>
   </div>

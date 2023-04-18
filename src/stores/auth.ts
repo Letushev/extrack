@@ -11,7 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthorized = computed(() => accessToken.value !== null)
 
-  let timeoutId: number | null = null
+  let timeoutId: NodeJS.Timeout | null = null
 
   const authorize = (params: {
     userId: string

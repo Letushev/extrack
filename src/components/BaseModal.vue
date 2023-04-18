@@ -7,9 +7,11 @@ withDefaults(
     title: string
     confirmText?: string
     formId?: string
+    loading?: boolean
   }>(),
   {
-    confirmText: 'Save'
+    confirmText: 'Save',
+    loading: false
   }
 )
 
@@ -27,7 +29,7 @@ defineEmits<{
     <Transition name="modal">
       <div
         v-if="open"
-        class="fixed left-1/2 top-1/2 w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-8 shadow-[0_5px_15px_rgba(0,0,0,0.35)]"
+        class="fixed left-1/2 top-1/2 max-h-[90vh] w-[480px] -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg bg-white p-8 shadow-[0_5px_15px_rgba(0,0,0,0.35)]"
       >
         <h1 class="mb-8 text-xl font-medium">{{ title }}</h1>
         <slot></slot>
@@ -35,7 +37,9 @@ defineEmits<{
           <BaseButton size="small" variant="outlined" color="text" @click="$emit('close')">
             Cancel
           </BaseButton>
-          <BaseButton size="small" @click="$emit('confirm')" :form="formId">{{ confirmText }}</BaseButton>
+          <BaseButton size="small" @click="$emit('confirm')" :form="formId" :is-loading="loading">
+            {{ confirmText }}
+          </BaseButton>
         </div>
       </div>
     </Transition>
