@@ -2,6 +2,8 @@
 import { useField } from 'vee-validate'
 import { ref } from 'vue'
 
+import IconButton from './IconButton.vue'
+
 const props = defineProps<{
   name: string
   title: string
@@ -30,12 +32,13 @@ const clearFile = () => {
   <div class="w-full">
     <div v-if="url" class="relative flex justify-center">
       <img :src="url" alt="" class="mx-auto max-w-full" />
-      <button
+      <IconButton
+        color="error"
         @click="clearFile"
-        class="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full border border-red bg-white"
+        class="absolute right-2 top-2"
       >
-        <FontAwesomeIcon icon="fa-solid fa-trash-can" class="text-red" size="sm" />
-      </button>
+        <FontAwesomeIcon icon="fa-solid fa-trash-can" size="sm" />
+      </IconButton>
     </div>
     <label
       v-else

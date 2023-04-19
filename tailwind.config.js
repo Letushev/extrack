@@ -28,6 +28,9 @@ export default {
       'flash-white': '#F2F3F6',
     },
     extend: {
+      fontSize: {
+        'xxs': '0.625rem'
+      },
       fontFamily: {
         'sans': ['Rubik', ...defaultTheme.fontFamily.sans]
       },
