@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { deleteExercise } from '@/api/exercises'
-import BaseModal from '@/components/BaseModal.vue'
+import BaseModal from '@/components/ui/BaseModal.vue'
 import { useMutation } from '@/composables/use-mutation'
 import { useToastsStore } from '@/stores/toasts'
 

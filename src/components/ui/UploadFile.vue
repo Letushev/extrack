@@ -7,11 +7,13 @@ import IconButton from './IconButton.vue'
 const props = defineProps<{
   name: string
   title: string
+  initialUrl?: string
+  disableDelete?: boolean
 }>()
 
 const { handleChange, errorMessage } = useField<File | null>(() => props.name)
 
-const url = ref<string | null>(null)
+const url = ref<string | null>(props.initialUrl ?? null)
 
 const onFileChange = (event: Event) => {
   const input = event.target as HTMLInputElement
@@ -33,6 +35,7 @@ const clearFile = () => {
     <div v-if="url" class="relative flex justify-center">
       <img :src="url" alt="" class="mx-auto max-w-full" />
       <IconButton
+        v-if="!disableDelete"
         color="error"
         @click="clearFile"
         class="absolute right-2 top-2"

@@ -15,17 +15,17 @@ const router = createRouter({
       name: 'login',
       path: '/login',
       meta: { requiredUserState: 'not-authorized' },
-      component: () => import('@/views/LoginPage.vue')
+      component: () => import('@/pages/LoginPage.vue')
     },
     {
       name: 'signup',
       path: '/signup',
       meta: { requiredUserState: 'not-authorized' },
-      component: () => import('@/views/SignupPage.vue')
+      component: () => import('@/pages/SignupPage.vue')
     },
     {
       path: '/',
-      component: () => import('@/components/AppLayout.vue'),
+      component: () => import('@/components/layout/AppLayout.vue'),
       meta: { requiredUserState: 'authorized' },
       children: [
         {
@@ -35,17 +35,17 @@ const router = createRouter({
         {
           name: 'tracking',
           path: 'tracking',
-          component: () => import('@/views/ExercisesPage.vue')
+          component: () => import('@/pages/TrackingPage.vue')
         },
         {
           name: 'exercises',
           path: 'exercises',
-          component: () => import('@/views/ExercisesPage.vue')
+          component: () => import('@/pages/ExercisesPage.vue')
         },
         {
           path: '/:notFound(.*)*',
           name: 'NotFound',
-          component: () => import('@/views/NotFound.vue')
+          component: () => import('@/pages/NotFound.vue')
         }
       ]
     }

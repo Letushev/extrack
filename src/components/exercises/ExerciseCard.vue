@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import BaseBadge from './BaseBadge.vue'
-import IconButton from './IconButton.vue'
+import BaseBadge from '@/components/ui/BaseBadge.vue'
+import IconButton from '@/components/ui/IconButton.vue'
 
 const props = defineProps<{
   image: string

@@ -3,7 +3,7 @@ import { onClickOutside } from '@vueuse/core'
 import { useField } from 'vee-validate'
 import { computed, ref, watch } from 'vue'
 
-type Option = { value: string; label: string }
+type Option = { value: string; label?: string; image?: string }
 
 const props = defineProps<{
   name: string
@@ -23,7 +23,7 @@ const hasError = computed(() => Boolean(errorMessage.value))
 const helperText = computed(() => errorMessage.value || props.helperText)
 
 const selectedValueLabel = computed(
-  () => props.options.find((option) => option.value === value.value)?.label ?? ''
+  () => props.options.find((option) => option.value === value.value)?.label ?? value.value
 )
 
 watch(showOptions, (show) => {
@@ -84,7 +84,8 @@ const selectOption = (option: Option) => {
               class="flex h-11 cursor-pointer items-center border-b border-b-bright-grey px-4 text-base last-of-type:border-none hover:bg-bubbles"
               :class="{ 'bg-bubbles': option.value === value }"
             >
-              {{ option.label }}
+              <img v-if="option.image" :src="option.image" alt="" width="20" class="mr-2" />
+              <span>{{ option.label ?? option.value }} </span>
             </li>
           </ul>
         </div>

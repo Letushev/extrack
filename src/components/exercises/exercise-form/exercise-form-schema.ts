@@ -1,7 +1,7 @@
 import { toTypedSchema } from '@vee-validate/zod'
 import { z } from 'zod'
 
-import type { TypedSchemaOutput } from '@/utils/handy-types'
+import type { TypedSchemaInput, TypedSchemaOutput } from '@/utils/handy-types'
 import { nullableInput } from '@/utils/zod-schema'
 
 export const exerciseFormSchema = toTypedSchema(
@@ -14,4 +14,5 @@ export const exerciseFormSchema = toTypedSchema(
   })
 )
 
+export type ExerciseFormInput = TypedSchemaInput<typeof exerciseFormSchema>
 export type ExerciseFormOutput = TypedSchemaOutput<typeof exerciseFormSchema>

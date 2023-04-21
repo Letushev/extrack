@@ -1,5 +1,5 @@
 import axios, { AxiosError, type AxiosRequestConfig } from 'axios'
-import { z, type ZodTypeAny } from 'zod'
+import { z, ZodSchema } from 'zod'
 
 const ClientErrorSchema = z.object({
   error: z.object({
@@ -8,20 +8,23 @@ const ClientErrorSchema = z.object({
 })
 
 /** Simple axios request with strict response schema and primitive error handling  */
-export const request = async <TResponseSchema extends ZodTypeAny>(
+export const request = async <
+  TResponseSchema extends ZodSchema,
+  TResult = TResponseSchema extends undefined ? any : z.infer<TResponseSchema>
+>(
   requestConfig: AxiosRequestConfig,
   responseSchema?: TResponseSchema,
   clientErrors: Record<string, string> = {}
-) => {
+): Promise<TResult> => {
   try {
     const response = await axios(requestConfig)
 
-    if (!responseSchema) return
+    if (!responseSchema) return response.data
 
     const parsedData = responseSchema.safeParse(response.data)
 
     if (parsedData.success) {
-      return parsedData.data as z.infer<typeof responseSchema>
+      return parsedData.data
     } else {
       throw 'Failed to parse the response'
     }
