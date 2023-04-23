@@ -1,34 +1,36 @@
 <script setup lang="ts">
 import { onClickOutside } from '@vueuse/core'
-import { useField } from 'vee-validate'
 import { computed, ref, watch } from 'vue'
 
 type Option = { value: string; label?: string; image?: string }
 
 const props = defineProps<{
-  name: string
+  modelValue: string
   options: Array<Option>
   label?: string
+  error?: boolean
   helperText?: string
   id?: string
+  disableClearButton?: boolean
+}>()
+
+const emit = defineEmits<{
+  (emit: 'update:modelValue', value: string): void
+  (emit: 'onClose'): void
 }>()
 
 const showOptions = ref(false)
 const containerRef = ref<HTMLDivElement | null>(null)
 
-const { value, errorMessage, handleChange, validate } = useField<string>(() => props.name)
-
 const labelConnector = computed(() => props.id || props.label)
-const hasError = computed(() => Boolean(errorMessage.value))
-const helperText = computed(() => errorMessage.value || props.helperText)
 
 const selectedValueLabel = computed(
-  () => props.options.find((option) => option.value === value.value)?.label ?? value.value
+  () => props.options.find((option) => option.value === props.modelValue)?.label ?? props.modelValue
 )
 
 watch(showOptions, (show) => {
   if (!show) {
-    validate()
+    emit('onClose')
   }
 })
 
@@ -37,7 +39,12 @@ onClickOutside(containerRef, () => {
 })
 
 const selectOption = (option: Option) => {
-  handleChange(option.value)
+  emit('update:modelValue', option.value)
+}
+
+const clearValue = () => {
+  emit('update:modelValue', '')
+  showOptions.value = false
 }
 </script>
 
@@ -56,11 +63,15 @@ const selectOption = (option: Option) => {
         :value="selectedValueLabel"
         :class="[
           'h-12 w-full cursor-pointer rounded border border-bright-grey pl-4 pr-14 text-base focus:border-blue focus:outline-none',
-          hasError ? 'border-red' : 'border-bright-grey'
+          error ? 'border-red' : 'border-bright-grey'
         ]"
       />
 
-      <button type="button" class="absolute right-4 top-1/2 h-6 w-6 -translate-y-1/2">
+      <button
+        v-if="!modelValue || disableClearButton"
+        type="button"
+        class="absolute right-4 top-1/2 h-6 w-6 -translate-y-1/2"
+      >
         <FontAwesomeIcon
           icon="fa-solid fa-chevron-down"
           size="xs"
@@ -69,6 +80,15 @@ const selectOption = (option: Option) => {
             'rotate-180': showOptions
           }"
         />
+      </button>
+
+      <button
+        v-if="modelValue && !disableClearButton"
+        type="button"
+        class="absolute right-4 top-1/2 h-6 w-6 -translate-y-1/2"
+        @click.stop="clearValue"
+      >
+        <FontAwesomeIcon icon="fa-solid fa-xmark" size="sm" class="text-grey" />
       </button>
 
       <Transition name="options">
@@ -82,7 +102,7 @@ const selectOption = (option: Option) => {
               :key="option.value"
               @click="selectOption(option)"
               class="flex h-11 cursor-pointer items-center border-b border-b-bright-grey px-4 text-base last-of-type:border-none hover:bg-bubbles"
-              :class="{ 'bg-bubbles': option.value === value }"
+              :class="{ 'bg-bubbles': option.value === modelValue }"
             >
               <img v-if="option.image" :src="option.image" alt="" width="20" class="mr-2" />
               <span>{{ option.label ?? option.value }} </span>
@@ -92,7 +112,7 @@ const selectOption = (option: Option) => {
       </Transition>
     </div>
 
-    <span v-if="helperText" :class="['mt-1.5 block text-xs', hasError ? 'text-red' : 'text-grey']">
+    <span v-if="helperText" :class="['mt-1.5 block text-xs', error ? 'text-red' : 'text-grey']">
       {{ helperText }}
     </span>
   </div>

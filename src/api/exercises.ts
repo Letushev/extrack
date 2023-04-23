@@ -34,7 +34,7 @@ export const getExercises = ({ userId }: { userId: string }) => {
   return request(
     {
       method: 'GET',
-      url: 'https://extrack-4fc97-default-rtdb.firebaseio.com/exercises.json',
+      url: `https://extrack-4fc97-default-rtdb.firebaseio.com/exercises.json`,
       params: {
         orderBy: '"userId"',
         equalTo: `"${userId}"`

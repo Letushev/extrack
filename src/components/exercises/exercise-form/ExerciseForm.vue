@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useForm } from 'vee-validate'
 
-import BaseSelect from '@/components/ui/BaseSelect.vue'
+import FormSelect from '@/components/form/FormSelect.vue'
 import TextField from '@/components/ui/TextField.vue'
 import UploadFile from '@/components/ui/UploadFile.vue'
 import { equipmentOptions } from '@/constants/equipment-options'
@@ -53,8 +53,8 @@ initFile()
       :disableDelete="variant === 'edit'"
     />
     <TextField name="name" label="Name" />
-    <BaseSelect name="muscleGroup" label="Muscle group" :options="muscleGroupOptions" />
-    <BaseSelect name="equipment" label="Equipment" :options="equipmentOptions" />
+    <FormSelect name="muscleGroup" label="Muscle group" :options="muscleGroupOptions" />
+    <FormSelect name="equipment" label="Equipment" :options="equipmentOptions" />
     <TextField name="description" label="Description" multiline />
   </form>
 </template>
